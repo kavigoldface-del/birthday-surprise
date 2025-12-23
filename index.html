@@ -1,172 +1,183 @@
-olumn;
-            align-items: center; justify-content: center; z-index: 1000; transition: 1s;
-        }
-        );
-            width: 350px; height: 450px; perspective: 1000px; z-index: 100;
-        }
-        .note-card { width: 100%; height: 100%; position: relative; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
-        .note-card.is-flipped { transform: rotateY(180deg); }
-        .front, .back {<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You 🥀</title>
+    <title>Birthday Journey 🥀</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Playfair+Display:ital,wght@1,400&display=swap');
         body { margin: 0; overflow: hidden; background: #000; font-family: 'Playfair Display', serif; }
         #overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; color: white; display: flex; flex-direction: cbutton {
-            padding: 15px 30px; background: none
-        <p style="margin-bottom: 20px; font-style: italic; color: #d4af37;">Journey starting... turn up volume.</p>
-        <button onclick="start()">START JOURNEY</button>
+            background: #000; color: white; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        button {
+            padding: 15px 30px; background: none; border: 1px solid #d4af37;
+            color: #d4af37; cursor: pointer; font-size: 1.2rem; letter-spacing: 2px;
+        }
+        #watch { position: fixed; top: 40px; left: 40px; color: #fff; font-size: 3rem; font-family: monospace; text-shadow: 0 0 20px cyan; opacity: 0; z-index: 50; }
+        
+        #note-container {
+            display: none; position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            width: 380px; height: 500px; perspective: 1000px; z-index: 100;
+        }
+        .note-card { width: 100%; height: 100%; position: relative; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+        .note-card.is-flipped { transform: rotateY(180deg); }
+        .front, .back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            background: #fffcf2; border: 2px solid #d4af37; padding: 25px; box-sizing: border-box;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9); color: #2d2d2d; border-radius: 10px; overflow: hidden;
+        }
+        .back { transform: rotateY(180deg); background: #fdf2f2; }
+        
+        #marquee-container {
+            position: fixed; bottom: 10%; width: 100%; overflow: hidden;
+            display: none; white-space: nowrap; z-index: 200;
+        }
+        #marquee-text {
+            display: inline-block; font-family: 'Courier Prime', monospace;
+            font-size: 3rem; color: white; padding-left: 100%;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <button onclick="start()">ENTER THE NIGHT</button>
     </div>
 
-    <div id="watch">23:59:50</div>
+    <div id="watch">23:59:55</div>
     
     <div id="note-container">
         <div class="note-card" id="card">
             <div class="front">
-                <h2 style="color:#8b0000; text-align:center;">Happy Birthday 🥀</h2>
-                <p>I know I've made mistakes that hurt you. But today, I want you to know you're genuinely the most important person in my life.</p>
-                <p style="text-align: center; color: #999; font-size: 0.8rem; margin-top: 40px;">[ Click to flip ]</p>
+                <p>Vro 🥀, happy birthday. I hope you know how much you matter and how much people actually notice you, even when you feel invisible. Life can be messy and heavy, but I hope this year brings you moments that make it feel worth it, people who actually get you, and a little peace for all the stuff you’ve been carrying. I want you to know I’m always here for you, no matter what. You deserve that more than anything.</p>
+                <p style="text-align: center; color: #999; font-size: 0.7rem;">[ Click to flip ]</p>
             </div>
             <div class="back">
-                <h2 style="font-style: italic; color: #8b0000; font-size: 1.5rem; line-height: 1.4; padding: 10px;">
-                    "In a world full of variables, you're my only constant. Happy Birthday Vro🥀"
-                </h2>
+                <p>I know I’ve hurt you a lot, and I’m really sorry. I never meant to. As I said before, I’m not planning to leave you anytime soon. The only thing is, getting into a relationship is impossible for me right now—you know why. But if you’re willing to wait, I promise we can figure things out in the future.</p>
+                <p style="font-style: italic; color: #8b0000; text-align: center; margin-top: 20px;">
+                    In a world full of variables, you're my only constant.
+                </p>
             </div>
         </div>
     </div>
 
-    <div id="final-msg">You do matter, don't worry... ✨</div>
+    <div id="marquee-container"><div id="marquee-text">You do matter, don't worry... You do matter, don't worry...</div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script>
         const sfx = {
-            footsteps: new Audio('https://www.soundjay.com/footsteps/footsteps-4.mp3'),
-            breathing: new Audio('https://www.soundjay.com/human/man-breathing-1.mp3'),
+            walk: new Audio('https://www.soundjay.com/footsteps/footsteps-4.mp3'),
+            breath: new Audio('https://www.soundjay.com/human/man-breathing-1.mp3'),
             sit: new Audio('https://www.soundjay.com/clothes/clothing-rustle-1.mp3'),
+            flip: new Audio('https://www.soundjay.com/misc/sounds/paper-flip-1.mp3'),
+            bird: new Audio('https://www.soundjay.com/nature/sounds/pigeon-1.mp3'),
             firework: new Audio('https://www.soundjay.com/mechanical/firework-explosion-1.mp3')
         };
-        sfx.footsteps.loop = true;
-        sfx.breathing.loop = true;
-        sfx.breathing.volume = 0.9;
+        sfx.walk.loop = true; sfx.breath.loop = true;
 
+        // Scene
         const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.15); // Fog like the image
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({color: 0x050505}));
+        // Ground
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({color: 0x111111}));
         ground.rotation.x = -Math.PI/2;
         scene.add(ground);
-        scene.add(new THREE.AmbientLight(0x111111));
 
-        const lamp = new THREE.PointLight(0xffaa00, 3, 20);
-        lamp.position.set(2, 4, -8);
-        scene.add(lamp);
+        // Street Lamp (Matching your Image)
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 6), new THREE.MeshStandardMaterial({color: 0x000000}));
+        pole.position.set(2, 3, -10);
+        scene.add(pole);
+        
+        const lampLight = new THREE.PointLight(0xffcc77, 4, 15);
+        lampLight.position.set(2, 5.5, -10);
+        scene.add(lampLight);
 
-        const bench = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 1), new THREE.MeshStandardMaterial({color: 0x1a0f00}));
-        bench.position.set(0, 0.5, -8);
+        // Bench
+        const bench = new THREE.Mesh(new THREE.BoxGeometry(3, 0.5, 1.2), new THREE.MeshStandardMaterial({color: 0x1a0a00}));
+        bench.position.set(0, 0.25, -10);
         scene.add(bench);
 
-        camera.position.set(0, 1.6, 15);
+        // Cake & Candle
+        const cake = new THREE.Group();
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.2), new THREE.MeshStandardMaterial({color: 0xffffff}));
+        const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.2), new THREE.MeshStandardMaterial({color: 0xff0000}));
+        candle.position.y = 0.2;
+        const flame = new THREE.PointLight(0xffaa00, 1, 2);
+        flame.position.y = 0.35;
+        cake.add(base, candle, flame);
+        cake.position.set(-0.8, 0.6, -10);
+        cake.visible = false;
+        scene.add(cake);
+
+        // Pigeon (Simple shape for bird)
+        const bird = new THREE.Mesh(new THREE.SphereGeometry(0.1), new THREE.MeshBasicMaterial({color: 0xffffff}));
+        bird.visible = false;
+        scene.add(bird);
+
+        camera.position.set(0, 1.6, 20);
 
         function start() {
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => document.getElementById('overlay').remove(), 1000);
-            
-            sfx.footsteps.play();
-            sfx.breathing.play();
+            document.getElementById('overlay').style.display = 'none';
+            sfx.walk.play(); sfx.breath.play();
             document.getElementById('watch').style.opacity = '1';
 
-            gsap.to(camera.position, { 
-                z: -6.5, 
-                duration: 10, 
-                ease: "power1.inOut",
-                onComplete: () => {
-                    sfx.footsteps.pause();
-                    sfx.breathing.pause();
-                    sfx.sit.play();
-                    gsap.to(camera.position, { y: 1.1, duration: 1.5 });
-                    gsap.to(camera.rotation, { x: -0.15, duration: 1.5 });
-                }
-            });
+            // Walk to Bench
+            gsap.to(camera.position, { z: -8, duration: 12, ease: "none", onComplete: sitDown });
 
-            let time = 50;
+            // Watch Countdown
+            let s = 55;
             const timer = setInterval(() => {
-                time++;
-                if(time < 60) document.getElementById('watch').innerText = "23:59:" + time;
+                s++;
+                if(s < 60) document.getElementById('watch').innerText = "23:59:" + s;
                 else {
                     document.getElementById('watch').innerText = "00:00";
                     document.getElementById('watch').style.color = "gold";
                     clearInterval(timer);
-                    setTimeout(showLetter, 1000);
                 }
             }, 1000);
         }
 
-        function showLetter() {
+        function sitDown() {
+            sfx.walk.pause(); sfx.breath.pause(); sfx.sit.play();
+            gsap.to(camera.position, { y: 1.1, duration: 2 });
+            gsap.to(camera.rotation, { x: -0.2, duration: 2 });
+            
+            setTimeout(() => {
+                cake.visible = true;
+                // Flicker candle
+                setInterval(() => flame.intensity = 0.5 + Math.random(), 100);
+                showNote();
+            }, 1500);
+        }
+
+        function showNote() {
             document.getElementById('note-container').style.display = 'block';
-            gsap.from('#note-container', { opacity: 0, scale: 0, duration: 1.5, ease: "back.out(1.7)" });
+            gsap.from('#note-container', { opacity: 0, y: 50, duration: 1.5 });
         }
 
         document.getElementById('card').onclick = function() {
             this.classList.toggle('is-flipped');
-            setTimeout(skySequence, 6000); 
+            sfx.flip.play();
+            setTimeout(pigeonAction, 8000);
         };
 
-        function skySequence() {
+        function pigeonAction() {
             gsap.to('#note-container', { opacity: 0, duration: 2 });
-            gsap.to(camera.rotation, { x: 0.9, duration: 4, ease: "power2.inOut" });
+            bird.position.set(5, 5, -5);
+            bird.visible = true;
+            sfx.bird.play();
 
-            setInterval(() => {
-                createFirework();
-                let f = sfx.firework.cloneNode(true);
-                f.volume = 1.0;
-                f.play();
-            }, 1500);
-
-            setTimeout(() => {
-                const msg = document.getElementById('final-msg');
-                msg.style.bottom = "45%";
-                msg.style.opacity = "1";
-            }, 4000);
-        }
-
-        function createFirework() {
-            const color = new THREE.Color(`hsl(${Math.random() * 360}, 100%, 60%)`);
-            const x = (Math.random() - 0.5) * 20;
-            const y = 15;
-            const z = -20;
-
-            for(let i=0; i<80; i++) {
-                const p = new THREE.Mesh(new THREE.SphereGeometry(0.12), new THREE.MeshBasicMaterial({color: color}));
-                p.position.set(x, y, z);
-                scene.add(p);
-                
-                gsap.to(p.position, {
-                    x: x + (Math.random() - 0.5) * 18,
-                    y: y + (Math.random() - 0.5) * 18,
-                    z: z + (Math.random() - 0.5) * 18,
-                    duration: 2.8,
-                    ease: "power3.out"
-                });
-                gsap.to(p.material, { opacity: 0, transparent: true, duration: 2.8, onComplete: () => scene.remove(p) });
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-        animate();
-    </script>
-</body>
-
-</html>
+            // Bird lands near hand/camera
+            gsap.to(bird.position, { x: 0.5, y: 0
